@@ -23,9 +23,12 @@ public class Question {
     @NotBlank(message = "required")
     @Size(min = 10,max = 100,message = "Title must be between 10 and 100 characters")
     private String title;
+
     @NotBlank(message = "required")
     @Size(min = 10,max = 1000,message = "Content must be between 10 and 100 characters")
     private String content;
+
+    private Integer views;
 
     @CreatedDate
     private LocalDateTime createdAt;
