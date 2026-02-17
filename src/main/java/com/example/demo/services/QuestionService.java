@@ -6,6 +6,8 @@ import com.example.demo.dto.QuestionResponseDto;
 import com.example.demo.models.Question;
 import com.example.demo.repositories.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -34,7 +36,11 @@ public class QuestionService implements IQuestionService {
 
     @Override
     public Flux<QuestionResponseDto> searchQuestions(String searchTerm, int offset, int page) {
-        return null;
+//        Pageable pageable=PageRequest(offset,page);
+        return questionRepository.findByTitleOrContentContainingIgnoreCase(searchTerm, PageRequest.of(offset,page))
+                .map(QuestionAdapter::toQuestionResponseDTO)
+                .doOnError(error-> System.out.println(error))
+                .doOnComplete(()-> System.out.println("questions fetched successfully"));
     }
 
     @Override
