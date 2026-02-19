@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+
 @Repository
 public interface QuestionRepository extends ReactiveMongoRepository<Question,String> {
     // Whenever you have to  store set of records u use Flux(it process data as stream).
@@ -16,7 +18,8 @@ public interface QuestionRepository extends ReactiveMongoRepository<Question,Str
     //Mono produce single data
     @Query("{ '$or': [ { 'title': { $regex: ?0, $options: 'i'} }, { 'content' : { $regex: ?0, $options: 'i' } } ] }")
     Flux<Question> findByTitleOrContentContainingIgnoreCase(String searchTerm, Pageable pageable);
-    Flux<Question> findByAuthorId(String authorId);
 
-    Mono<Long> countByAuthorId(String authorId);
+    Flux<Question> findByCreatedAtGreaterThanOrderByCreatedAtAsc(LocalDateTime cursor, Pageable pageable);
+
+    Flux<Question> findTop10ByOrderByCreatedAtAsc();
 }
