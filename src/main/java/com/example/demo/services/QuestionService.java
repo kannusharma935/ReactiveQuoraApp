@@ -3,7 +3,9 @@ package com.example.demo.services;
 import com.example.demo.adapter.QuestionAdapter;
 import com.example.demo.dto.QuestionRequestDto;
 import com.example.demo.dto.QuestionResponseDto;
+import com.example.demo.events.ViewCountEvent;
 import com.example.demo.models.Question;
+import com.example.demo.producers.KafkaEventProducer;
 import com.example.demo.repositories.QuestionRepository;
 import com.example.demo.utils.CursorUtils;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Service
 public class QuestionService implements IQuestionService {
+
+    private final KafkaEventProducer kafkaEventProducer;
 
     private final QuestionRepository questionRepository;
 
@@ -70,8 +74,8 @@ public class QuestionService implements IQuestionService {
                 .doOnError(error -> System.out.println("Error fetching question: " + error))
                 .doOnSuccess(response -> {
                     System.out.println("Question fetched successfully: " + response);
-//                    ViewCountEvent viewCountEvent = new ViewCountEvent(id, "question", LocalDateTime.now());
-//                    kafkaEventProducer.publishViewCountEvent(viewCountEvent);
+                        ViewCountEvent viewCountEvent = new ViewCountEvent(id, "question", LocalDateTime.now());
+                        kafkaEventProducer.publishViewCountEvent(viewCountEvent);
                 });
     }
 }

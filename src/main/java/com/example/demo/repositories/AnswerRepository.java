@@ -11,7 +11,7 @@ public interface AnswerRepository extends ReactiveMongoRepository<Answer, String
 
     Mono<Long> countByQuestionId(String questionId);
 
-    Flux<Answer> findByQuestionIdOrderByCreatedDesc(String questionId);
+    Flux<Answer> findByQuestionIdOrderByCreatedAtDesc(String questionId);
 
     Flux<Answer> findByQuestionIdOrderByCreatedAtAsc(String questionId);
 
